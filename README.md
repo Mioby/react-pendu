@@ -2,4 +2,4 @@ React Pendu
 ===============
 
 
-Let's do it :D 
+This is a version of the hangman game made with React and some love
