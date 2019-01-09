@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { ModalEndGame } from "./includes/modalEndGame"
 import { Alert } from './includes/alert'
 import { FailedLetter } from './includes/renderFailedLetter'
+import { Gamebody } from './includes/gameBody'
 import $ from 'jquery';
 
 	class App extends Component {
@@ -73,41 +74,19 @@ import $ from 'jquery';
     }
 
 		render() {
-	    const { letter, word, goodLetters, isAlreadyTried, failedLetters, gameState, nbFoundLetter } = this.state
-			const nbLetters = word.split("").length
-
-      const gameBody = (
-        <div>
-            <p>{nbLetters} letters word</p>
-            <div className="d-flex justify-content-center">
-              {
-								word.split("").map( (value, index) => (
-                    <span className="flex-fill text-center border-bottom border-primary py-2 m-3" key={'letter_'+index}>
-                        { goodLetters.includes(value) ? value : '?' }
-                    </span>
-                  )
-              	)
-							}
-            </div>
-
-            <div className="d-flex">
-                <div className="input-group m-3 w-25">
-                  <input id="js-input" type="text" className="form-control" maxLength="1" placeholder="Give a letter" aria-label="Give a letter" aria-describedby="button-addon2" onChange={this.handleKeyUp} onKeyPress={this.handleKeyPress}/>
-                  <div className="input-group-append">
-                    <button disabled={this.state.isAlreadyTried} className="btn btn-primary js-btn-submit" type="button" onClick={this.validateChoosen}>
-                        Try !
-                    </button>
-                  </div>
-                </div>
-                { isAlreadyTried ? <Alert type='warning'>You already tried this letter !</Alert> : null }
-            </div>
-
-            <div id="js-message-area">
-                <p className="mr-2">Failed attempt : {this.state.failed}/10</p>
-                { failedLetters.length > 0 ? <FailedLetter>{ failedLetters.map((value, index) => value) }</FailedLetter> : null }
-            </div>
-    		</div>
-      )
+	    const { letter, word, goodLetters, isAlreadyTried, failedLetters, gameState, nbFoundLetter } = this.state,
+						tabWord = word.split(""),
+						gameParameters = {
+							tabWord: tabWord,
+							goodLetters: goodLetters,
+							handleKeyUp: this.handleKeyUp,
+							handleKeyPress: this.handleKeyPress,
+							testIsAlreadyTried: this.state.isAlreadyTried,
+							validateChoosen: this.validateChoosen,
+							isAlreadyTried: isAlreadyTried,
+							failedAttempt: this.state.failed,
+							failedLetters: failedLetters
+						}
 
       if(gameState != -1) {
           $('#js-modal-end').modal('show')
@@ -122,7 +101,7 @@ import $ from 'jquery';
           </div>
 
 					{
-					    word != '' ? gameBody : ''
+					    word != '' ? <Gamebody gameParameters={gameParameters}/> : ''
 					}
 
 	        <ModalEndGame gameState={gameState} start={this.start}>
